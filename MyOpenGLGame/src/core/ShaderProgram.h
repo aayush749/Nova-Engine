@@ -1,6 +1,7 @@
 #pragma once
 #include "Shader.h"
 #include <vector>
+#include <unordered_map>
 
 class ShaderProgram
 {
@@ -23,6 +24,12 @@ public:
 	
 
 	GLint GetProgramID() { return m_ProgramID; }
+
+	void BindUniform1f(float val, const char* uniformName)
+	{
+		auto u_Loc = glGetUniformLocation(m_ProgramID, uniformName);
+		glProgramUniform1f(m_ProgramID, u_Loc, val);
+	}
 
 private:
 	void CheckLinkingErrors();

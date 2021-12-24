@@ -167,8 +167,8 @@
     <ClInclude Include="src\core\models\Triangle.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\shaders\triangle_frag.glsl" />
-    <None Include="src\shaders\triangle_vert.glsl" />
+    <None Include="src\shaders\crazy_triangle_frag.glsl" />
+    <None Include="src\shaders\crazy_triangle_vert.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
