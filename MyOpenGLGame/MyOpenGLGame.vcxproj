@@ -118,7 +118,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;DEBUG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>C:\SDKs\glm;C:\SDKs\glew-2.1.0\include;C:\SDKs\glfw-3.3.2.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -155,12 +155,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\InputManager.cpp" />
     <ClCompile Include="src\core\ShaderProgram.cpp" />
     <ClCompile Include="src\core\Shader.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\InputManager.h" />
     <ClInclude Include="src\core\ShaderProgram.h" />
     <ClInclude Include="src\core\Shader.h" />
     <ClInclude Include="src\core\Window.h" />

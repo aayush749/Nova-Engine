@@ -5,6 +5,7 @@ in vec3 col;
 out vec4 color;
 
 uniform float time;
+uniform mat4 proj;
 
 void main()
 {

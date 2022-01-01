@@ -18,6 +18,11 @@ public:
 		return m_Window;
 	}
 
+	GLFWwindow* operator&() const
+	{
+		return GetWindowHandle();
+	}
+
 	~Window()
 	{
 		glfwDestroyWindow(m_Window);

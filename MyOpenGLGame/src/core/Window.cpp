@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "InputManager.h"
 
 #include <iostream>
 #include <string>
@@ -37,4 +38,9 @@ Window::Window(const char* title, int width, int height)
 	glfwSwapInterval(1);
 
 	std::cout << "Window Created. Current Context Details: " << glGetString(GL_VERSION) << std::endl;
+
+	// initialize input managers
+	InputManager::KeyBoard::init(m_Window);
+	InputManager::Mouse::init(m_Window);
+	InputManager::MouseCursor::init(m_Window);
 }

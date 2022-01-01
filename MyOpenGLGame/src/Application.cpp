@@ -5,6 +5,7 @@
 #include "core/models/Triangle.h"
 
 #include <glm/gtc/type_ptr.hpp>
+#include "core/InputManager.h"
 
 struct Vertex
 {
@@ -14,12 +15,13 @@ struct Vertex
 
 void triangleSetUp(std::array<Vertex, 3>& verts, GLuint* vbo);
 
+double mouseXPos, mouseYPos;
+
 int main()
 {
 	Window window("My Game", 1280, 720);
 
 	glClearColor(1.0f, .0f, .0f, 1.0f);
-
 	
 	Shader vShader(R"(C:\Users\ANAND\source\repos\MyOpenGLGame\MyOpenGLGame\src\shaders\crazy_triangle_vert.glsl)", GL_VERTEX_SHADER),
 		fShader(R"(C:\Users\ANAND\source\repos\MyOpenGLGame\MyOpenGLGame\src\shaders\crazy_triangle_frag.glsl)", GL_FRAGMENT_SHADER);
@@ -33,20 +35,36 @@ int main()
 
 	triangle.Model(vShader, fShader, 1, triangleSetUp);
 
+	int width, height;
+	float aspect;
+	float cameraX = 0.0f, cameraY = 0.0f, cameraZ = 8.0f;
+	glfwGetFramebufferSize(window.GetWindowHandle(), &width, &height);
+	aspect = (float)width / (float)height;
 
-	glm::vec2 vertices[] = {
-		{-0.5, -0.5},
-		{0.0, 0.5},
-		{0.5, -0.5}
-	};
+	auto perspective = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 100.0f);
+	
 
-
-	while (!glfwWindowShouldClose(window.GetWindowHandle()))
+	while (!glfwWindowShouldClose(&window))
 	{
+		if (InputManager::KeyBoard::IsKeyDown(GLFW_KEY_Q))
+		{
+			glfwSetWindowShouldClose(&window, true);
+		}
+
+		auto[mouseXPos, mouseYPos] = InputManager::MouseCursor::GetMousePosXY();
+		
+		auto view = glm::translate(glm::mat4(1.0f), 
+			glm::vec3(mouseXPos/100.0f, -mouseYPos/100.0f, -cameraZ));
+
+		auto modelMat = glm::translate(glm::mat4(1.0f), 
+			glm::vec3(0.0, 0.0, 0.0));
+
+		auto resMat = perspective * view * modelMat;
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		auto& tSp = triangle.GetRenderingProgram();
 		tSp.BindUniform1f(glfwGetTime(), "time");
+		tSp.BindUniformMatrix4fv(resMat, "proj");
 		triangle.Render();
 
 
