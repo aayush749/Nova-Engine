@@ -43,7 +43,8 @@ int main()
 
 	auto perspective = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 100.0f);
 	
-
+	double mousePrevX = mouseXPos, mousePrevY = mouseYPos;
+	double camPosX = {}, camPosY = {};
 	while (!glfwWindowShouldClose(&window))
 	{
 		if (InputManager::KeyBoard::IsKeyDown(GLFW_KEY_Q))
@@ -53,8 +54,22 @@ int main()
 
 		auto[mouseXPos, mouseYPos] = InputManager::MouseCursor::GetMousePosXY();
 		
+		auto delXMouse = mouseXPos - mousePrevX;
+		auto delYMouse = mouseYPos - mousePrevY;
+
+		mousePrevX = mouseXPos;		mousePrevY = mouseYPos;
+
+		if (!(abs(delXMouse) <= abs(1e-3)))
+		{
+			camPosX += (int)delXMouse % 2;
+		}
+		if (!(abs(delYMouse) <= abs(1e-3)))
+		{
+			camPosY += (int)delYMouse % 2;
+		}
+
 		auto view = glm::translate(glm::mat4(1.0f), 
-			glm::vec3(mouseXPos/100.0f, -mouseYPos/100.0f, -cameraZ));
+			glm::vec3(-camPosX/10.0, camPosY/10.0, -cameraZ));
 
 		auto modelMat = glm::translate(glm::mat4(1.0f), 
 			glm::vec3(0.0, 0.0, 0.0));
