@@ -3,6 +3,7 @@
 #include "core/Window.h"
 
 #include "core/models/Triangle.h"
+#include "core/Camera.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include "core/InputManager.h"
@@ -12,6 +13,18 @@ struct Vertex
 	glm::vec2 position;
 	glm::vec3 color;
 };
+
+void* operator new(size_t bytes)
+{
+	std::cout << "Allocating " << bytes << " bytes\n";
+	return malloc(bytes);
+}
+
+void operator delete(void* mem, size_t bytes)
+{
+	std::cout << "De-allocating " << bytes << " bytes\n";
+	free(mem);
+}
 
 void triangleSetUp(std::array<Vertex, 3>& verts, GLuint* vbo);
 
@@ -36,15 +49,17 @@ int main()
 	triangle.Model(vShader, fShader, 1, triangleSetUp);
 
 	int width, height;
-	float aspect;
 	float cameraX = 0.0f, cameraY = 0.0f, cameraZ = 8.0f;
 	glfwGetFramebufferSize(window.GetWindowHandle(), &width, &height);
-	aspect = (float)width / (float)height;
-
-	auto perspective = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 100.0f);
 	
+	Camera camera(glm::vec3(-cameraX, -cameraY, -cameraZ), .1, 100., width, height);
+
 	double mousePrevX = mouseXPos, mousePrevY = mouseYPos;
 	double camPosX = {}, camPosY = {};
+	
+	auto modelMat = glm::translate(glm::mat4(1.0f), 
+			glm::vec3(0.0, 0.0, 0.0));
+
 	while (!glfwWindowShouldClose(&window))
 	{
 		if (InputManager::KeyBoard::IsKeyDown(GLFW_KEY_Q))
@@ -68,13 +83,10 @@ int main()
 			camPosY += (int)delYMouse % 2;
 		}
 
-		auto view = glm::translate(glm::mat4(1.0f), 
-			glm::vec3(-camPosX/10.0, camPosY/10.0, -cameraZ));
+		camera.rotateByAmtandAxis(0.5f, glm::vec3(0.0, 1.0, 0.0));
+		camera.translateByAmt(glm::vec3(delXMouse / 1000., delYMouse/ 1000., 0.0f));
 
-		auto modelMat = glm::translate(glm::mat4(1.0f), 
-			glm::vec3(0.0, 0.0, 0.0));
-
-		auto resMat = perspective * view * modelMat;
+		auto&& resMat = camera.getProjectionMat() * camera.getViewMat() * modelMat;
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		auto& tSp = triangle.GetRenderingProgram();

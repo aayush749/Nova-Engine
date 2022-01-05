@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\Camera.cpp" />
     <ClCompile Include="src\core\InputManager.cpp" />
     <ClCompile Include="src\core\ShaderProgram.cpp" />
     <ClCompile Include="src\core\Shader.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="src\core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\Camera.h" />
     <ClInclude Include="src\core\InputManager.h" />
     <ClInclude Include="src\core\ShaderProgram.h" />
     <ClInclude Include="src\core\Shader.h" />
