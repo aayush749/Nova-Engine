@@ -121,7 +121,7 @@
       <PreprocessorDefinitions>GLEW_STATIC;DEBUG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\SDKs\glm;C:\SDKs\glew-2.1.0\include;C:\SDKs\glfw-3.3.2.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\src\vendors;C:\SDKs\glm;C:\SDKs\glew-2.1.0\include;C:\SDKs\glfw-3.3.2.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -141,7 +141,7 @@
       <PreprocessorDefinitions>GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\SDKs\glm;C:\SDKs\glew-2.1.0\include;C:\SDKs\glfw-3.3.2.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\src\vendors;C:\SDKs\glm;C:\SDKs\glew-2.1.0\include;C:\SDKs\glfw-3.3.2.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -155,20 +155,40 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\CameraOrtho.cpp" />
     <ClCompile Include="src\core\Camera.cpp" />
+    <ClCompile Include="src\core\CameraPerspective.cpp" />
     <ClCompile Include="src\core\InputManager.cpp" />
     <ClCompile Include="src\core\ShaderProgram.cpp" />
     <ClCompile Include="src\core\Shader.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
+    <ClCompile Include="src\vendors\imgui\imgui.cpp" />
+    <ClCompile Include="src\vendors\imgui\imgui_demo.cpp" />
+    <ClCompile Include="src\vendors\imgui\imgui_draw.cpp" />
+    <ClCompile Include="src\vendors\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="src\vendors\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="src\vendors\imgui\imgui_tables.cpp" />
+    <ClCompile Include="src\vendors\imgui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\CameraOrtho.h" />
     <ClInclude Include="src\core\Camera.h" />
+    <ClInclude Include="src\core\CameraPerspective.h" />
     <ClInclude Include="src\core\InputManager.h" />
     <ClInclude Include="src\core\ShaderProgram.h" />
     <ClInclude Include="src\core\Shader.h" />
     <ClInclude Include="src\core\Window.h" />
     <ClInclude Include="src\core\models\Triangle.h" />
+    <ClInclude Include="src\vendors\imgui\imconfig.h" />
+    <ClInclude Include="src\vendors\imgui\imgui.h" />
+    <ClInclude Include="src\vendors\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="src\vendors\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="src\vendors\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="src\vendors\imgui\imgui_internal.h" />
+    <ClInclude Include="src\vendors\imgui\imstb_rectpack.h" />
+    <ClInclude Include="src\vendors\imgui\imstb_textedit.h" />
+    <ClInclude Include="src\vendors\imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\crazy_triangle_frag.glsl" />

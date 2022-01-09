@@ -3,10 +3,14 @@
 #include "core/Window.h"
 
 #include "core/models/Triangle.h"
-#include "core/Camera.h"
+#include "core/CameraPerspective.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include "core/InputManager.h"
+
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
 
 struct Vertex
 {
@@ -30,12 +34,16 @@ void triangleSetUp(std::array<Vertex, 3>& verts, GLuint* vbo);
 
 double mouseXPos, mouseYPos;
 
+// Input processing
+void ProcessInput(GLFWwindow* window);
+
+// Window Clear Color
+glm::vec4 clearColor = { 1.0f, .0f, .0f, 1.0f };
+
 int main()
 {
 	Window window("My Game", 1280, 720);
 
-	glClearColor(1.0f, .0f, .0f, 1.0f);
-	
 	Shader vShader(R"(C:\Users\ANAND\source\repos\MyOpenGLGame\MyOpenGLGame\src\shaders\crazy_triangle_vert.glsl)", GL_VERTEX_SHADER),
 		fShader(R"(C:\Users\ANAND\source\repos\MyOpenGLGame\MyOpenGLGame\src\shaders\crazy_triangle_frag.glsl)", GL_FRAGMENT_SHADER);
 
@@ -52,7 +60,7 @@ int main()
 	float cameraX = 0.0f, cameraY = 0.0f, cameraZ = 8.0f;
 	glfwGetFramebufferSize(window.GetWindowHandle(), &width, &height);
 	
-	Camera camera(glm::vec3(-cameraX, -cameraY, -cameraZ), .1, 100., width, height);
+	CameraPerspective pCam(glm::vec3(-cameraX, -cameraY, -cameraZ), .1, 100., width, height);
 
 	double mousePrevX = mouseXPos, mousePrevY = mouseYPos;
 	double camPosX = {}, camPosY = {};
@@ -62,10 +70,19 @@ int main()
 
 	while (!glfwWindowShouldClose(&window))
 	{
-		if (InputManager::KeyBoard::IsKeyDown(GLFW_KEY_Q))
-		{
-			glfwSetWindowShouldClose(&window, true);
-		}
+		glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+
+		// Start the Dear ImGui frame
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::Begin("Hello, World");                          // Create a window called "Hello, world!" and append into it.
+
+		ImGui::Text("Change Window Properties");               // Display some text (you can use a format strings too)
+		
+
+		ProcessInput(&window);
 
 		auto[mouseXPos, mouseYPos] = InputManager::MouseCursor::GetMousePosXY();
 		
@@ -83,10 +100,14 @@ int main()
 			camPosY += (int)delYMouse % 2;
 		}
 
-		camera.rotateByAmtandAxis(0.5f, glm::vec3(0.0, 1.0, 0.0));
-		camera.translateByAmt(glm::vec3(delXMouse / 1000., delYMouse/ 1000., 0.0f));
+		// Provide sliders to change clear color
+		ImGui::SliderFloat4("Clear Color", &clearColor[0], 0.0f, 1.0f);
+		ImGui::Text("Choose your window color");
 
-		auto&& resMat = camera.getProjectionMat() * camera.getViewMat() * modelMat;
+		pCam.rotateByAmtandAxis(0.5f, glm::vec3(0.0, 1.0, 0.0));
+		pCam.translateByAmt(glm::vec3(delXMouse / 1000., delYMouse/ 1000., 0.0f));
+		ImGui::End();
+		auto resMat = pCam.getProjectionMat() * pCam.getViewMat() * modelMat;
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		auto& tSp = triangle.GetRenderingProgram();
@@ -95,10 +116,17 @@ int main()
 		triangle.Render();
 
 
-		glfwSwapBuffers(window.GetWindowHandle());
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		glfwSwapBuffers(&window);
 		glfwPollEvents();
 	}
 
+
+	// Cleanup
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 	glfwTerminate();
 }
 
@@ -118,4 +146,12 @@ void triangleSetUp(std::array<Vertex, 3>& verts, GLuint* vbo)
 	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void ProcessInput(GLFWwindow* window)
+{
+	if (InputManager::KeyBoard::IsKeyDown(GLFW_KEY_Q))
+	{
+		glfwSetWindowShouldClose(window, true);
+	}
 }

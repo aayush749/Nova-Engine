@@ -1,5 +1,6 @@
 #include "Camera.h"
 
+
 const glm::mat4& Camera::getProjectionMat() const
 {
     return m_ProjMat;
@@ -22,7 +23,7 @@ void Camera::translateByAmt(glm::vec3&& amtTransVec)
         amtTransVec.x *= -1;  //To simulate proper camera motion
         m_Pos += amtTransVec;
         //m_ViewMat = glm::translate(glm::mat4(1.0f), m_Pos);
-        updateViewMat();
+        updateViewMat(amtTransVec);
     }
 }
 
@@ -66,15 +67,27 @@ void Camera::rotZ(const float degrees)
 
 
 //c-tor
-Camera::Camera(const glm::vec3& cameraPosition, float near, float far, float width, float height)
+Camera::Camera(const glm::vec3& cameraPosition)
     :m_Pos(cameraPosition)
-{
-    m_ViewMat = glm::translate(glm::mat4(1.0f), cameraPosition);
-    m_ProjMat = glm::perspective((float)glm::radians(60.), width / height , near, far);
-}
+{}
 
 void Camera::updateViewMat()
 {
     // reposition the camera to the camera position
     m_ViewMat = glm::translate(glm::mat4(1.0f), m_Pos);
+}
+
+void Camera::updateViewMat(const glm::vec3& amountVec)
+{
+    m_ViewMat = glm::translate(m_ViewMat, amountVec);
+}
+
+void Camera::SetViewMat(const glm::mat4& viewMat)
+{
+    m_ViewMat = viewMat;
+}
+
+void Camera::SetProjectionMat(const glm::mat4& projMat)
+{
+    m_ProjMat = projMat;
 }

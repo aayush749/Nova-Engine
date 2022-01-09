@@ -5,6 +5,10 @@
 #include <string>
 #include <exception>
 
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+
 Window::Window(const char* title, int width, int height)
 	:m_Title(title), m_Width(width), m_Height(height)
 {
@@ -43,4 +47,18 @@ Window::Window(const char* title, int width, int height)
 	InputManager::KeyBoard::init(m_Window);
 	InputManager::Mouse::init(m_Window);
 	InputManager::MouseCursor::init(m_Window);
+
+	//ImGui initialization
+
+	//ImGUI setup
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+
+	// Setup Platform/Renderer backends
+	ImGui_ImplGlfw_InitForOpenGL(this->m_Window, true);
+	ImGui_ImplOpenGL3_Init("#version 430");
 }
