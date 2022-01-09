@@ -12,10 +12,13 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
+#include <stb_image/stb_image.h>
+
 struct Vertex
 {
 	glm::vec2 position;
 	glm::vec3 color;
+	glm::vec2 tc;
 };
 
 void* operator new(size_t bytes)
@@ -40,6 +43,13 @@ void ProcessInput(GLFWwindow* window);
 // Window Clear Color
 glm::vec4 clearColor = { 1.0f, .0f, .0f, 1.0f };
 
+// Temporary texture
+GLuint texture;
+
+void zoomCameraIn(Camera* cam);
+void zoomCameraOut(Camera* cam);
+
+
 int main()
 {
 	Window window("My Game", 1280, 720);
@@ -50,9 +60,9 @@ int main()
 
 
 	Triangle<Vertex> triangle;
-	triangle[0] = { glm::vec2{-0.5, -0.5}, glm::vec3{1.0, 1.0, 0.0} };
-	triangle[1] = { glm::vec2{0.0, 0.5}  , glm::vec3{0.0, 1.0, 0.0} };
-	triangle[2] = { glm::vec2{0.5, -0.5} , glm::vec3{1.0, 0.0, 1.0} };
+	triangle[0] = { glm::vec2{-0.5, -0.5}, glm::vec3{1.0, 1.0, 0.0}, glm::vec2{0.0, 0.0} };
+	triangle[1] = { glm::vec2{0.0, 0.5}  , glm::vec3{0.0, 1.0, 0.0}, glm::vec2{0.5, 1.0} };
+	triangle[2] = { glm::vec2{0.5, -0.5} , glm::vec3{1.0, 0.0, 1.0}, glm::vec2{1.0, 0.0} };
 
 	triangle.Model(vShader, fShader, 1, triangleSetUp);
 
@@ -105,6 +115,17 @@ int main()
 		ImGui::Text("Choose your window color");
 
 		pCam.rotateByAmtandAxis(0.5f, glm::vec3(0.0, 1.0, 0.0));
+
+
+		if (InputManager::KeyBoard::IsKeyDown(GLFW_KEY_UP))
+		{
+			zoomCameraIn(&pCam);
+		}
+		if (InputManager::KeyBoard::IsKeyDown(GLFW_KEY_DOWN))
+		{
+			zoomCameraOut(&pCam);
+		}
+
 		pCam.translateByAmt(glm::vec3(delXMouse / 1000., delYMouse/ 1000., 0.0f));
 		ImGui::End();
 		auto resMat = pCam.getProjectionMat() * pCam.getViewMat() * modelMat;
@@ -135,15 +156,42 @@ void triangleSetUp(std::array<Vertex, 3>& verts, GLuint* vbo)
 	Vertex* vertices = verts.data();
 	glGenBuffers(1, vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, *vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 15,
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 21,
 		vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
-		5 * sizeof(float), (const void*)0);
+		7 * sizeof(float), (const void*)0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
-		5 * sizeof(float), (const void*)8);
+		7 * sizeof(float), (const void*)8);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE,
+		7 * sizeof(float), (const void*)20);
+
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+	int imgWid, imgHt, imgChann;
+	GLubyte* img = stbi_load(R"(C:\Users\ANAND\source\repos\MyOpenGLGame\MyOpenGLGame\assets\Textures\wall.jpg)", &imgWid, &imgHt, &imgChann, 0);
+
+	if (img)
+	{
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWid, imgHt, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	else
+	{
+		std::cerr << "Unable to load texture" << std::endl;
+	}
+
+
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
@@ -154,4 +202,14 @@ void ProcessInput(GLFWwindow* window)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
+}
+
+void zoomCameraIn(Camera* cam)
+{
+	cam->moveZ(0.5);
+}
+
+void zoomCameraOut(Camera* cam)
+{
+	cam->moveZ(-0.5);
 }

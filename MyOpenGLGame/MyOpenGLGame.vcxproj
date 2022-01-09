@@ -170,6 +170,7 @@
     <ClCompile Include="src\vendors\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\vendors\imgui\imgui_tables.cpp" />
     <ClCompile Include="src\vendors\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\vendors\stb_image\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\CameraOrtho.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="src\vendors\imgui\imstb_rectpack.h" />
     <ClInclude Include="src\vendors\imgui\imstb_textedit.h" />
     <ClInclude Include="src\vendors\imgui\imstb_truetype.h" />
+    <ClInclude Include="src\vendors\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\crazy_triangle_frag.glsl" />

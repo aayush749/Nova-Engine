@@ -7,6 +7,8 @@
 #include <array>
 #include <functional>
 
+extern GLuint texture;
+
 template <typename T = glm::vec2>
 class Triangle
 {
@@ -92,6 +94,7 @@ public:
 	void Render()
 	{
 		glUseProgram(m_ShaderProgram.GetProgramID());
+		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(m_vao);
 
 
