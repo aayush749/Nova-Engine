@@ -4,6 +4,7 @@
 
 #include "core/models/Triangle.h"
 #include "core/CameraPerspective.h"
+#include "core/Texture2D.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include "core/InputManager.h"
@@ -43,9 +44,6 @@ void ProcessInput(GLFWwindow* window);
 // Window Clear Color
 glm::vec4 clearColor = { 1.0f, .0f, .0f, 1.0f };
 
-// Temporary texture
-GLuint texture;
-
 void zoomCameraIn(Camera* cam);
 void zoomCameraOut(Camera* cam);
 
@@ -57,7 +55,7 @@ int main()
 	Shader vShader(R"(C:\Users\ANAND\source\repos\MyOpenGLGame\MyOpenGLGame\src\shaders\crazy_triangle_vert.glsl)", GL_VERTEX_SHADER),
 		fShader(R"(C:\Users\ANAND\source\repos\MyOpenGLGame\MyOpenGLGame\src\shaders\crazy_triangle_frag.glsl)", GL_FRAGMENT_SHADER);
 
-
+	Texture2D wallTexture(R"(C:\Users\ANAND\source\repos\MyOpenGLGame\MyOpenGLGame\assets\Textures\wall.jpg)", 3, true, true);
 
 	Triangle<Vertex> triangle;
 	triangle[0] = { glm::vec2{-0.5, -0.5}, glm::vec3{1.0, 1.0, 0.0}, glm::vec2{0.0, 0.0} };
@@ -65,6 +63,7 @@ int main()
 	triangle[2] = { glm::vec2{0.5, -0.5} , glm::vec3{1.0, 0.0, 1.0}, glm::vec2{1.0, 0.0} };
 
 	triangle.Model(vShader, fShader, 1, triangleSetUp);
+	triangle.FitTexture(&wallTexture);
 
 	int width, height;
 	float cameraX = 0.0f, cameraY = 0.0f, cameraZ = 8.0f;
@@ -169,29 +168,6 @@ void triangleSetUp(std::array<Vertex, 3>& verts, GLuint* vbo)
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
-
-	int imgWid, imgHt, imgChann;
-	GLubyte* img = stbi_load(R"(C:\Users\ANAND\source\repos\MyOpenGLGame\MyOpenGLGame\assets\Textures\wall.jpg)", &imgWid, &imgHt, &imgChann, 0);
-
-	if (img)
-	{
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWid, imgHt, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-	else
-	{
-		std::cerr << "Unable to load texture" << std::endl;
-	}
-
-
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

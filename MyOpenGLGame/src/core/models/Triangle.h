@@ -3,11 +3,10 @@
 #include <glm/vec2.hpp>
 #include "../Shader.h"
 #include "../ShaderProgram.h"
+#include "../Texture.h"
 
 #include <array>
 #include <functional>
-
-extern GLuint texture;
 
 template <typename T = glm::vec2>
 class Triangle
@@ -20,6 +19,8 @@ private:
 	GLuint m_vao, *m_vbo;
 	Shader m_VertexShader, m_FragmentShader;
 	ShaderProgram m_ShaderProgram;
+
+	Texture* m_ptrTexture = nullptr;
 public:
 
 	Triangle() = default;
@@ -85,6 +86,7 @@ public:
 		CreateShaderProgram();
 	}
 
+	void FitTexture(Texture* texture) { m_ptrTexture = texture; }
 	
 	VertexType& operator[](const size_t& offset)
 	{
@@ -94,7 +96,11 @@ public:
 	void Render()
 	{
 		glUseProgram(m_ShaderProgram.GetProgramID());
-		glBindTexture(GL_TEXTURE_2D, texture);
+
+		// bind the texture if the texture is applied
+		if (m_ptrTexture)
+			m_ptrTexture->BindTexture();
+	
 		glBindVertexArray(m_vao);
 
 

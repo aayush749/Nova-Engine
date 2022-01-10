@@ -171,6 +171,8 @@
     <ClCompile Include="src\vendors\imgui\imgui_tables.cpp" />
     <ClCompile Include="src\vendors\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\vendors\stb_image\stb_image.cpp" />
+    <ClCompile Include="src\core\Texture.cpp" />
+    <ClCompile Include="src\core\Texture2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\CameraOrtho.h" />
@@ -191,6 +193,8 @@
     <ClInclude Include="src\vendors\imgui\imstb_textedit.h" />
     <ClInclude Include="src\vendors\imgui\imstb_truetype.h" />
     <ClInclude Include="src\vendors\stb_image\stb_image.h" />
+    <ClInclude Include="src\core\Texture.h" />
+    <ClInclude Include="src\core\Texture2D.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\crazy_triangle_frag.glsl" />

@@ -18,6 +18,7 @@ public:
 	virtual void rotY(const float degrees);
 	virtual void rotZ(const float degrees);
 
+	virtual ~Camera() {}
 protected:
 	//ctor
 	Camera(const glm::vec3& cameraPosition);
