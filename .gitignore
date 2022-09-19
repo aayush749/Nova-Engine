@@ -361,4 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-*.jpg
+# *.jpg
+
+# imgui ini
+MyOpenGLGame/imgui.ini
