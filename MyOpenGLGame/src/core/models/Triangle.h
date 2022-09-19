@@ -27,31 +27,8 @@ public:
 
 	Triangle(Shader& vShader, Shader& fShader, int n_VBOS,
 		std::function<void(std::array<VertexType, 3>&, GLuint*)> vboSpecFn)
-		:m_VertexShader(vShader), m_FragmentShader(fShader)
 	{
-		glCreateVertexArrays(1, &m_vao);
-		glBindVertexArray(m_vao);
-
-		m_vbo = new GLuint[n_VBOS];
-
-		vboSpecFn(vertices, m_vbo);
-
-		glBindVertexArray(0);
-
-		// fit the shaders
-		try
-		{
-			m_VertexShader.Fit();
-			m_FragmentShader.Fit();
-		}
-		catch (const std::exception& e)
-		{
-			std::cerr << "Exception thrown while fitting shaders: " << e.what() << std::endl;
-			std::cout << "Could not load shader for the triangle" << std::endl;
-			return;
-		}
-
-		CreateShaderProgram();
+		Model(vShader, fShader, n_VBOS, vboSpecFn);
 	}
 	
 

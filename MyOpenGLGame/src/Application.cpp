@@ -5,6 +5,7 @@
 #include "core/models/Triangle.h"
 #include "core/CameraPerspective.h"
 #include "core/Texture2D.h"
+#include "core/logging/Logger.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include "core/InputManager.h"
@@ -24,13 +25,22 @@ struct Vertex
 
 void* operator new(size_t bytes)
 {
-	std::cout << "Allocating " << bytes << " bytes\n";
+	if (bytes < 0)
+		return nullptr;
+	
+	char MSG[1024];
+	snprintf(MSG, sizeof(MSG), "Allocating bytes: %u", bytes);
+	Logger::log(MSG, Log::WARNING);
+	
 	return malloc(bytes);
 }
 
 void operator delete(void* mem, size_t bytes)
 {
-	std::cout << "De-allocating " << bytes << " bytes\n";
+	char MSG[1024];
+	snprintf(MSG, sizeof(MSG), "De-allocating bytes: %u", bytes);
+
+	Logger::log(MSG, Log::INFO);
 	free(mem);
 }
 
@@ -47,16 +57,17 @@ glm::vec4 clearColor = { 1.0f, .0f, .0f, 1.0f };
 void zoomCameraIn(Camera* cam);
 void zoomCameraOut(Camera* cam);
 
-
 int main()
 {
+	Logger::init(Log::INFO, true);
 	Window window("My Game", 1280, 720);
+
+	Logger::log("Window Created!");
 
 	Shader vShader(R"(C:\Users\ANAND\source\repos\MyOpenGLGame\MyOpenGLGame\src\shaders\crazy_triangle_vert.glsl)", GL_VERTEX_SHADER),
 		fShader(R"(C:\Users\ANAND\source\repos\MyOpenGLGame\MyOpenGLGame\src\shaders\crazy_triangle_frag.glsl)", GL_FRAGMENT_SHADER);
 
 	Texture2D wallTexture(R"(C:\Users\ANAND\source\repos\MyOpenGLGame\MyOpenGLGame\assets\Textures\wall.jpg)", 3, true, true);
-
 	Triangle<Vertex> triangle;
 	triangle[0] = { glm::vec2{-0.5, -0.5}, glm::vec3{1.0, 1.0, 0.0}, glm::vec2{0.0, 0.0} };
 	triangle[1] = { glm::vec2{0.0, 0.5}  , glm::vec3{0.0, 1.0, 0.0}, glm::vec2{0.5, 1.0} };

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "logging/Logger.h"
+
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -24,7 +26,7 @@ namespace InputManager {
 				glfwSetKeyCallback(window, KeyBoard::KeyCallBack);
 
 #ifdef DEBUG
-				std::cout << "Keyboard input manager initialized!" << std::endl;
+				Logger::log("Keyboard input manager initialized!");
 #endif // DEBUG
 			
 				// change the state of keyboard setup to true
@@ -69,7 +71,7 @@ namespace InputManager {
 
 				glfwSetMouseButtonCallback(window, Mouse::MouseCallBack);
 #ifdef DEBUG
-				std::cout << "Mouse input manager initialized!" << std::endl;
+				Logger::log("Mouse input manager initialized!");
 #endif // DEBUG
 				// change the state of the mouse set up to true
 				s_IsMouseSetUp = true;
@@ -119,7 +121,7 @@ namespace InputManager {
 			{
 				glfwSetCursorPosCallback(window, MouseCursor::MouseCursorCallBack);
 #ifdef DEBUG
-				std::cout << "Mouse Cursor input manager initialized!" << std::endl;
+				Logger::log("Mouse Cursor input manager initialized!");
 #endif // DEBUG
 				// change the state of the mouse set up to true
 				s_IsMouseCursorSetUp = true;

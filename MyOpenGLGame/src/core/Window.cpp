@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "InputManager.h"
+#include "logging/Logger.h"
 
 #include <iostream>
 #include <string>
@@ -41,7 +42,9 @@ Window::Window(const char* title, int width, int height)
 
 	glfwSwapInterval(1);
 
-	std::cout << "Window Created. Current Context Details: " << glGetString(GL_VERSION) << std::endl;
+	char MSG[1024];
+	snprintf(MSG, sizeof(MSG), "Window Created. Current Context Details: %s", glGetString(GL_VERSION));
+	Logger::log(MSG);
 
 	// initialize input managers
 	InputManager::KeyBoard::init(m_Window);
