@@ -29,7 +29,7 @@ void* operator new(size_t bytes)
 		return nullptr;
 	
 	char MSG[1024];
-	snprintf(MSG, sizeof(MSG), "Allocating bytes: %lu", bytes);
+	snprintf(MSG, sizeof(MSG), "Allocating bytes: %u", bytes);
 	Logger::log(MSG, Log::WARNING);
 	
 	return malloc(bytes);
@@ -38,7 +38,7 @@ void* operator new(size_t bytes)
 void operator delete(void* mem, size_t bytes)
 {
 	char MSG[1024];
-	snprintf(MSG, sizeof(MSG), "De-allocating bytes: %lu", bytes);
+	snprintf(MSG, sizeof(MSG), "De-allocating bytes: %u", bytes);
 
 	Logger::log(MSG, Log::INFO);
 	free(mem);
